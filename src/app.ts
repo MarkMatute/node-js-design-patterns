@@ -7,6 +7,9 @@ import Logger from './singleton/logger';
 import singletonConsumer1 from './singleton/consumer1';
 import singletonConsumer2 from './singleton/consumer2';
 
+// Strategy
+import StratigicyLogger from './strategy/logger';
+
 interface IApp {
     instance: Application;
     registerMiddlewares(): void;
@@ -42,6 +45,15 @@ class App implements IApp {
                 logCount: Logger.logCounter,
                 callers: Logger.allCallers
             });
+        });
+
+        // Strategy
+        router.get('/strategy', (request: Request, response: Response) => {
+            const stratigicLogger = new StratigicyLogger();
+            stratigicLogger.log(new Date().toString(), 'toConsole...');
+            stratigicLogger.changeStrategy('toFile');
+            stratigicLogger.log(new Date().toString(), 'toFile...');
+            response.json({ currentStrategy: stratigicLogger.getCurrentStrategy });
         });
 
         // Mount router
