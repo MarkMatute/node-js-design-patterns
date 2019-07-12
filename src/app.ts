@@ -20,6 +20,10 @@ import PersonBuilder from './builder/person_builder';
 import CatalogItem from './composite/catalog_item';
 import CatalogGroup from './composite/catalog_group';
 
+// Decorator
+import DecoratorShopper from './decorator/shopper';
+import { Item as DecoratorItem, GoldenItem } from './decorator/item';
+
 interface IApp {
     instance: Application;
     registerMiddlewares(): void;
@@ -104,6 +108,19 @@ class App implements IApp {
             response.json({
                 catalogGroup: catalogGroup.print(),
                 total: catalogGroup.total
+            });
+        });
+
+        // Decorator
+        router.get('/decorator', (request: Request, response: Response) => {
+            const shopper = new DecoratorShopper('Mark', 1000);
+            const regularItem = new DecoratorItem('Regular Item', 1000);
+            const goldenItem = new GoldenItem(regularItem);
+            console.log('regular price', regularItem.price);
+            console.log('golden price', goldenItem.price);
+            shopper.purchase(goldenItem);
+            response.json({
+                shopperBalance: shopper.balance
             });
         });
 
