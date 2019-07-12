@@ -13,6 +13,9 @@ import StratigicyLogger from './strategy/logger';
 // Factory
 import UserFactory from './factoty/user_factory';
 
+// Builder
+import PersonBuilder from './builder/person_builder';
+
 interface IApp {
     instance: Application;
     registerMiddlewares(): void;
@@ -68,6 +71,16 @@ class App implements IApp {
             response.json({
                 shopper: shopper.details,
                 employee: employee.details
+            });
+        });
+
+        // Builder
+        router.get('/builder', (request: Request, response: Response) => {
+            const manager = new PersonBuilder('Mark').makeEmployee().makeManager(70).build();
+            const partTimer = new PersonBuilder('Wena').makeEmployee().makePartTime(20).withMoney(1000).withList([ 'Iphone XS', 'Dress' ]).build();
+            response.json({
+                manager: manager.toString(),
+                partTimer: partTimer.toString()
             });
         });
 
