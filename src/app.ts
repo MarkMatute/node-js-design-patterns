@@ -16,6 +16,10 @@ import UserFactory from './factoty/user_factory';
 // Builder
 import PersonBuilder from './builder/person_builder';
 
+// Composite
+import CatalogItem from './composite/catalog_item';
+import CatalogGroup from './composite/catalog_group';
+
 interface IApp {
     instance: Application;
     registerMiddlewares(): void;
@@ -81,6 +85,25 @@ class App implements IApp {
             response.json({
                 manager: manager.toString(),
                 partTimer: partTimer.toString()
+            });
+        });
+
+        // Composites
+        router.get('/composites', (request: Request, response: Response) => {
+            const boots = new CatalogItem('Leather Boots', 80);
+            const sneakers = new CatalogItem('Nike', 80);
+            const slipperGroup = new CatalogGroup('Slippers Group', [
+                new CatalogItem('Slipper 1', 50),
+                new CatalogItem('Slipper 2', 90)
+            ]);
+            const catalogGroup = new CatalogGroup('Shoes & Such', [
+                boots,
+                sneakers,
+                slipperGroup
+            ]);
+            response.json({
+                catalogGroup: catalogGroup.print(),
+                total: catalogGroup.total
             });
         });
 
