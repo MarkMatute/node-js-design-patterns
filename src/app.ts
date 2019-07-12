@@ -10,6 +10,9 @@ import singletonConsumer2 from './singleton/consumer2';
 // Strategy
 import StratigicyLogger from './strategy/logger';
 
+// Factory
+import UserFactory from './factoty/user_factory';
+
 interface IApp {
     instance: Application;
     registerMiddlewares(): void;
@@ -54,6 +57,18 @@ class App implements IApp {
             stratigicLogger.changeStrategy('toFile');
             stratigicLogger.log(new Date().toString(), 'toFile...');
             response.json({ currentStrategy: stratigicLogger.getCurrentStrategy });
+        });
+
+
+        // Factory
+        router.get('/factory', (request: Request, response: Response) => {
+            const userFactory = new UserFactory();
+            const shopper = userFactory.createUser('shopper', 'Mark', 1000);
+            const employee = userFactory.createUser('employee', 'Wena');
+            response.json({
+                shopper: shopper.details,
+                employee: employee.details
+            });
         });
 
         // Mount router
