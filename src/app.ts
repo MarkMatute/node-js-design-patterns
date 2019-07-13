@@ -24,6 +24,12 @@ import CatalogGroup from './composite/catalog_group';
 import DecoratorShopper from './decorator/shopper';
 import { Item as DecoratorItem, GoldenItem } from './decorator/item';
 
+
+// Observer
+import ObserverStore from './observer/store';
+import ObserverShopper from './observer/shopper';
+import ObserverMall from './observer/mall';
+
 interface IApp {
     instance: Application;
     registerMiddlewares(): void;
@@ -121,6 +127,31 @@ class App implements IApp {
             shopper.purchase(goldenItem);
             response.json({
                 shopperBalance: shopper.balance
+            });
+        });
+
+        // Observer
+        router.get('/observer', (request: Request, response: Response) => {
+
+            const store1 = new ObserverStore('store1');
+            const store2 = new ObserverStore('store2');
+            const mark = new ObserverShopper('Mark');
+            const wena = new ObserverShopper('Wena');
+            const mall = new ObserverMall();
+
+            store1.subscribe(mark);
+            store1.subscribe(wena);
+            store1.subscribe(mall);
+
+            store2.subscribe(mark);
+            store2.subscribe(wena);
+            store2.subscribe(mall);
+
+            store1.sale(10);
+            store2.sale(20);
+
+            response.json({ 
+                observable: 'pattern'
             });
         });
 
